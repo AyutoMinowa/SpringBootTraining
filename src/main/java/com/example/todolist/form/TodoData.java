@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import com.example.todolist.entity.Todo;
 
@@ -15,34 +16,32 @@ import lombok.Data;
 public class TodoData {
 	private Integer id;
 	
-	@NotBlank(message="件名を入力してください")
+	@NotBlank(message = "件名を入力してください")
 	private String title;
 	
-	@NotBlank(message="重要度を選択してください")
-	private Integer impoertance;
+	@NotNull(message = "重要度を選択してください")
+	private Integer importance;
 	
-	@Min(value=0, message="緊急度を選択してください")
+	@Min(value = 0, message = "緊急度を選択してください")
 	private Integer urgency;
 	
 	private String deadline;
 	private String done;
-	
-	//入力データからEntityを作成して返す
+
 	public Todo toEntity() {
 		Todo todo = new Todo();
 		todo.setId(id);
 		todo.setTitle(title);
-		todo.setImportance(impoertance);
+		todo.setImportance(importance);
 		todo.setUrgency(urgency);
 		todo.setDone(done);
-		
 		SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd");
 		long ms;
 		try {
-		    ms = sdFormat.parse(deadline).getTime();
-		    todo.setDeadline(new Date(ms));
+			ms = sdFormat.parse(deadline).getTime();
+			todo.setDeadline(new Date(ms));
 		} catch (ParseException e) {
-		    todo.setDeadline(null);
+			todo.setDeadline(null);
 		}
 		return todo;
 	}
