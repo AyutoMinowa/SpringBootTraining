@@ -22,8 +22,9 @@ public class TodoService {
 	private final TodoRepository todoRepository;
 
 	public boolean isValid(TodoData todoData, BindingResult result) {
+
+		//件名が全角スペースだけで構成されていたらエラー
 		boolean ans = true;
-		// 件名が全角スペースだけで構成されていたらエラー
 		String title = todoData.getTitle();
 		if (title != null && !title.equals("")) {
 			boolean isAllDoubleSpace = true;
@@ -42,11 +43,13 @@ public class TodoService {
 				ans = false;
 			}
 		}
-		// 期限が過去日付ならエラー
+
+		//期限が過去日付ならエラー
 		String deadline = todoData.getDeadline();
 		if (!deadline.equals("")) {
 			LocalDate tody = LocalDate.now();
 			LocalDate deadlineDate = null;
+
 			try {
 				deadlineDate = LocalDate.parse(deadline);
 				if (deadlineDate.isBefore(tody)) {
@@ -66,19 +69,19 @@ public class TodoService {
 				ans = false;
 			}
 		}
+
 		return ans;
 	}
 
-	// Todolist4で追加
 	public boolean isValid(TodoQuery todoQuery, BindingResult result) {
 		boolean ans = true;
-		// 期限:開始の形式をチェック
+
+		//期限：開始の形式をチェック
 		String date = todoQuery.getDeadlineFrom();
 		if (!date.equals("")) {
 			try {
 				LocalDate.parse(date);
 			} catch (DateTimeException e) {
-				// parseできない場合
 				FieldError fieldError = new FieldError(
 						result.getObjectName(),
 						"deadlineFrom",
@@ -87,13 +90,13 @@ public class TodoService {
 				ans = false;
 			}
 		}
-		// 期限:終了の形式をチェック
+
+		//期限：終了の形式をチェック
 		date = todoQuery.getDeadlineTo();
 		if (!date.equals("")) {
 			try {
 				LocalDate.parse(date);
 			} catch (DateTimeException e) {
-				// parseできない場合
 				FieldError fieldError = new FieldError(
 						result.getObjectName(),
 						"deadlineTo",
@@ -105,7 +108,6 @@ public class TodoService {
 		return ans;
 	}
 
-	// Todolist4で追加
 	public List<Todo> doQuery(TodoQuery todoQuery) {
 		List<Todo> todoList = null;
 		if (todoQuery.getTitle().length() > 0) {
@@ -120,8 +122,7 @@ public class TodoService {
 		} else if (!todoQuery.getDeadlineFrom().equals("") &&
 				todoQuery.getDeadlineTo().equals("")) {
 			// 期限 開始～
-			todoList = todoRepository
-					.findByDeadlineGreaterThanEqualOrderByDeadlineAsc(
+			todoList = todoRepository.findByDeadlineGreaterThanEqualOrderByDeadlineAsc(
 							Utils.str2date(todoQuery.getDeadlineFrom()));
 		} else if (todoQuery.getDeadlineFrom().equals("") &&
 				!todoQuery.getDeadlineTo().equals("")) {

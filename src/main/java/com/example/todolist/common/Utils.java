@@ -5,7 +5,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 public class Utils {
-	// Todolist4で追加
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	public static Date str2date(String s) {

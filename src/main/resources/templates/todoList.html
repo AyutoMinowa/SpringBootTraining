@@ -52,10 +52,8 @@
 		<div th:if="${#fields.hasErrors('deadlineFrom')}" th:errors="*{deadlineFrom}" th:errorclass="red"></div>
 		<div th:if="${#fields.hasErrors('deadlineTo')}" th:errors="*{deadlineTo}" th:errorclass="red"></div>
 		<hr>
-		<button type="submit" th:formaction="@{/todo/create/form}">新規追加</button>
+		<a href="/todo/create">新規追加</a>
 	</form>
-	<!-- Todolist4で追加 終了 -->
-
 	<table border="1">
 		<tr>
 			<th>id</th>
@@ -74,7 +72,28 @@
 			<td th:text="${todo.done == 'Y' ? '完了':''}"></td>
 		</tr>
 	</table>
-	
+
+	<div th:if="${todoList != null && #lists.size(todoList) != 0}">
+		<span th:text="|${todoPage.getNumber() + 1} / ${todoPage.getTotalPages()} ページを表示中|">
+		</span>
+		<ul id="nav">
+			<li>
+				<span th:if="${todoPage.isFirst()}">←前</span>
+				<a th:unless="${todoPage.isFirst()}"
+					th:href="@{/todo/query(page = ${todoPage.getNumber() - 1})}">←前</a>
+			</li>
+			<li th:each="i : ${#numbers.sequence(0, todoPage.getTotalPages() - 1)}">
+				<span th:if="${i == todoPage.getNumber()}" th:text="${i + 1}"></span>
+				<a th:if="${i != todoPage.getNumber()}" th:href="@{/todo/query(page=${i})}"
+					th:text="${i + 1}"></a><!-- ② -->
+			</li>
+			<li>
+				<span th:if="${todoPage.isLast()}">次→</span>
+				<a th:unless="${todoPage.isLast()}"
+					th:href="@{/todo/query(page = (${todoPage.getNumber()+ 1}))}">次→</a>
+			</li>
+		</ul>
+	</div>
 </body>
 
 </html>
